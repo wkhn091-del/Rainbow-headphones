@@ -1,0 +1,862 @@
+/* Nexa Product Scroll — Blue Soda mechanics, Cold Studio skin */
+
+.nexa-ps {
+  --ps-bg: #0c0c0c;
+  --ps-ink: #f2f1ef;
+  --ps-muted: #9c9a96;
+  --ps-accent: #d8d6d2;
+  --ps-steel: #7eb8c4;
+  --ps-pad: 3.2vw;
+  --ps-grad: linear-gradient(105deg, #0e1218 0%, #1c2430 42%, #c8c4bc 100%);
+  position: relative;
+  background: var(--ps-bg);
+  color: var(--ps-ink);
+  overflow-x: hidden;
+  transition: background 0.6s ease, color 0.6s ease;
+}
+
+body.nexa-ps-on-color .nexa-ps {
+  --ps-bg: #0e1218;
+  background:
+    radial-gradient(ellipse 55% 45% at 70% 40%, rgba(126, 184, 196, 0.12), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 20% 70%, rgba(216, 214, 210, 0.08), transparent 50%),
+    #0e1218;
+}
+
+.nexa-ps *,
+.nexa-ps *::before,
+.nexa-ps *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#nexa-ps-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Above section paint, below chrome UI */
+  z-index: 40;
+  pointer-events: none;
+  /* Never sit on top of video cinema until this block is on screen */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease;
+}
+
+.nexa-ps .s {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.nexa-ps .s2 {
+  z-index: 2;
+}
+
+.nexa-ps .s3 {
+  z-index: 3;
+  background: var(--ps-grad);
+  color: #0c0c0c;
+  /* Soft plate behind the 3D cans — no hard circle clip */
+  --s3-plate: radial-gradient(
+    ellipse 42% 48% at 50% 52%,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(216, 214, 210, 0.12) 42%,
+    transparent 68%
+  );
+}
+
+.nexa-ps .s3::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--s3-plate);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Fixed UI */
+.nexa-ps .ps-badge {
+  position: fixed;
+  right: 3.5vw;
+  bottom: 3.5vw;
+  width: clamp(70px, 6.5vw, 120px);
+  aspect-ratio: 1;
+  z-index: 50;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.nexa-ps .ps-badge svg {
+  width: 100%;
+  height: 100%;
+  animation: nexaPsSpin 14s linear infinite;
+}
+
+.nexa-ps .ps-badge text {
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  fill: #fff;
+}
+
+.nexa-ps .ps-badge .leaf {
+  fill: var(--ps-accent);
+}
+
+.nexa-ps .ps-badge .vein {
+  stroke: var(--ps-bg);
+  stroke-width: 1;
+  fill: none;
+}
+
+@keyframes nexaPsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+body.nexa-ps-on-color .nexa-ps .ps-badge text {
+  fill: #d8d6d2;
+}
+
+body.nexa-ps-on-color .nexa-ps .ps-badge .leaf {
+  fill: #7eb8c4;
+}
+
+body.nexa-ps-on-color .nexa-ps .ps-badge .vein {
+  stroke: #0e1218;
+}
+
+body.nexa-ps-on-color .nexa-ps .s3 .ps-badge text {
+  fill: #0c0c0c;
+}
+
+/* Decorative atmosphere */
+.nexa-ps .ps-orbit {
+  position: absolute;
+  left: 58vw;
+  top: 48vh;
+  width: min(52vh, 42vw);
+  height: min(52vh, 42vw);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(216, 214, 210, 0.12);
+  box-shadow:
+    0 0 80px rgba(126, 184, 196, 0.12),
+    inset 0 0 60px rgba(216, 214, 210, 0.04);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.nexa-ps .ps-orbit--soft {
+  left: 30vw;
+  opacity: 0.7;
+  border-color: rgba(126, 184, 196, 0.18);
+}
+
+.nexa-ps .ps-ring {
+  position: absolute;
+  left: 58vw;
+  top: 48vh;
+  width: min(68vh, 54vw);
+  height: min(68vh, 54vw);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px dashed rgba(216, 214, 210, 0.08);
+  pointer-events: none;
+  z-index: 1;
+  animation: nexaPsSpin 48s linear infinite;
+}
+
+.nexa-ps .ps-chips {
+  position: absolute;
+  left: 8vw;
+  bottom: 12vh;
+  display: flex;
+  gap: 0.6rem;
+  list-style: none;
+  z-index: 5;
+}
+
+.nexa-ps .ps-chips li {
+  border: 1px solid rgba(216, 214, 210, 0.18);
+  background: rgba(12, 12, 12, 0.45);
+  backdrop-filter: blur(8px);
+  padding: 0.35rem 0.7rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ps-accent);
+}
+
+/* Section 1 */
+.nexa-ps .hero-copy {
+  position: absolute;
+  left: 10vw;
+  top: 50vh;
+  transform: translateY(-50%);
+  z-index: 5;
+}
+
+.nexa-ps .hero-lede {
+  margin-top: 1.2vw;
+  max-width: 22ch;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: clamp(12px, 0.85vw, 15px);
+  line-height: 1.55;
+  color: var(--ps-muted);
+  letter-spacing: 0.02em;
+}
+
+.nexa-ps .hero-pull {
+  margin-top: 0.85vw;
+  max-width: 28ch;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 500;
+  font-size: clamp(11px, 0.78vw, 14px);
+  line-height: 1.5;
+  color: var(--ps-steel);
+}
+
+.nexa-ps .eyebrow {
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  font-size: clamp(10px, 0.72vw, 13px);
+  line-height: 1.2;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ps-accent);
+  margin-bottom: 1.6vw;
+}
+
+.nexa-ps .hero-title {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 600;
+  font-size: 7vw;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  text-transform: none;
+}
+
+.nexa-ps .hero-title .line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.04em;
+}
+
+.nexa-ps .hero-title .line > span {
+  display: block;
+}
+
+.nexa-ps .hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.8vw;
+  margin-top: 2.2vw;
+}
+
+.nexa-ps .btn {
+  background: var(--ps-accent);
+  color: #0c0c0c;
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  font-size: clamp(12px, 0.8vw, 15px);
+  line-height: 1;
+  padding: 0.95em 1.9em;
+  border-radius: 999px;
+  text-decoration: none;
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nexa-ps .btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 28px rgba(216, 214, 210, 0.22);
+}
+
+.nexa-ps .link {
+  color: #fff;
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  font-size: clamp(12px, 0.8vw, 15px);
+  text-decoration: none;
+  padding-bottom: 4px;
+  border-bottom: 1px solid currentColor;
+}
+
+.nexa-ps .link span {
+  margin-inline-start: 0.35em;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.nexa-ps .link:hover span {
+  transform: translateX(-4px);
+}
+
+html[dir="rtl"] .nexa-ps .link:hover span {
+  transform: translateX(4px);
+}
+
+.nexa-ps .hero-note {
+  position: absolute;
+  left: 74vw;
+  top: 56vh;
+  width: 15vw;
+  z-index: 20;
+}
+
+.nexa-ps .hero-note .rule {
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: var(--ps-accent);
+  margin-bottom: 1.1vw;
+}
+
+.nexa-ps .hero-note strong {
+  display: block;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 600;
+  font-size: clamp(12px, 0.9vw, 17px);
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.nexa-ps .hero-note p {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: clamp(11px, 0.78vw, 14px);
+  line-height: 1.6;
+  color: var(--ps-muted);
+}
+
+.nexa-ps .scroll-cue {
+  position: absolute;
+  left: 50vw;
+  bottom: 3.2vw;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 5;
+}
+
+.nexa-ps .scroll-cue span {
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ps-muted);
+}
+
+.nexa-ps .scroll-cue i {
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: rgba(148, 163, 184, 0.35);
+  overflow: hidden;
+  position: relative;
+}
+
+.nexa-ps .scroll-cue i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 18px;
+  background: #fff;
+  animation: nexaPsCue 1.8s infinite;
+}
+
+@keyframes nexaPsCue {
+  from {
+    transform: translateY(-18px);
+  }
+  to {
+    transform: translateY(40px);
+  }
+}
+
+/* Section 2 */
+.nexa-ps .flavour {
+  position: absolute;
+  left: 52vw;
+  top: 48vh;
+  transform: translateY(-50%);
+  width: 28vw;
+  padding: 1.6vw 1.8vw;
+  border: 1px solid rgba(216, 214, 210, 0.12);
+  background: linear-gradient(
+    160deg,
+    rgba(14, 18, 24, 0.72),
+    rgba(14, 18, 24, 0.28)
+  );
+  backdrop-filter: blur(10px);
+}
+
+.nexa-ps .flavour-kicker {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ps-steel);
+  margin-bottom: 0.8vw;
+}
+
+.nexa-ps .flavour h2 {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 600;
+  font-size: 3.2vw;
+  line-height: 0.95;
+}
+
+.nexa-ps .flavour .sub {
+  margin-top: 1vw;
+  max-width: 20vw;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 600;
+  font-size: clamp(12px, 0.82vw, 16px);
+  line-height: 1.35;
+  color: var(--ps-accent);
+}
+
+.nexa-ps .flavour .body {
+  margin-top: 1.1vw;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: clamp(11px, 0.74vw, 14px);
+  line-height: 1.6;
+  color: var(--ps-muted);
+}
+
+.nexa-ps .flavour-pull {
+  margin-top: 1.2vw;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.nexa-ps .flavour-pull li {
+  font-size: clamp(11px, 0.75vw, 13px);
+  color: var(--ps-steel);
+  letter-spacing: 0.01em;
+}
+
+.nexa-ps .flavour-specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6vw;
+  margin-top: 1.6vw;
+  list-style: none;
+  border-top: 1px solid rgba(216, 214, 210, 0.12);
+  padding-top: 1.1vw;
+}
+
+.nexa-ps .flavour-specs li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nexa-ps .flavour-specs span {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ps-muted);
+}
+
+.nexa-ps .flavour-specs strong {
+  font-size: clamp(11px, 0.78vw, 14px);
+  font-weight: 600;
+  color: var(--ps-ink);
+}
+
+.nexa-ps .mask {
+  overflow: hidden;
+}
+
+.nexa-ps .mask > span {
+  display: inline-block;
+}
+
+/* Section 3 */
+.nexa-ps .wave {
+  position: absolute;
+  left: 0;
+  top: calc(-14vh + 1px);
+  width: 100%;
+  height: 14vh;
+}
+
+.nexa-ps .glow {
+  position: absolute;
+  left: 50vw;
+  top: 52vh;
+  width: 46vh;
+  height: 46vh;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+}
+
+.nexa-ps .ground {
+  position: absolute;
+  left: 50vw;
+  top: 81vh;
+  width: 22vh;
+  height: 3.2vh;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(7, 7, 8, 0.4), transparent);
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.nexa-ps .word {
+  position: absolute;
+  top: 52vh;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-body), sans-serif;
+  font-weight: 700;
+  font-size: 5.2vw;
+  line-height: 1;
+  text-transform: uppercase;
+  overflow: hidden;
+  padding-bottom: 0.04em;
+  color: #0c0c0c;
+}
+
+.nexa-ps .word.left {
+  left: 20vw;
+}
+
+.nexa-ps .word.right {
+  left: 80vw;
+}
+
+.nexa-ps .word > span {
+  display: inline-block;
+}
+
+.nexa-ps .s3-portal {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: min(52vh, 38vw);
+  height: min(52vh, 38vw);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 2;
+  border: 1px solid rgba(12, 12, 12, 0.2);
+  box-shadow:
+    0 0 0 12px rgba(216, 214, 210, 0.08),
+    0 40px 80px rgba(0, 0, 0, 0.35);
+}
+
+.nexa-ps .s3-portal__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  filter: saturate(0.9) brightness(0.75);
+}
+
+.nexa-ps .s3-portal__veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 45%,
+    transparent 35%,
+    rgba(12, 12, 12, 0.55) 100%
+  );
+}
+
+.nexa-ps .s3-cta {
+  position: absolute;
+  left: 50%;
+  bottom: 7vh;
+  transform: translateX(-50%);
+  z-index: 5;
+  background: #0c0c0c;
+  color: #f2f1ef;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.85em 1.6em;
+  border-radius: 999px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nexa-ps .s3-cta:hover {
+  transform: translateX(-50%) scale(1.04);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.nexa-ps .s3-tag {
+  position: absolute;
+  left: 50%;
+  top: 14vh;
+  transform: translateX(-50%);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(12, 12, 12, 0.55);
+  z-index: 4;
+}
+
+.nexa-ps .s3-caption {
+  position: absolute;
+  left: 50%;
+  bottom: 14vh;
+  transform: translateX(-50%);
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: clamp(12px, 0.9vw, 15px);
+  color: rgba(12, 12, 12, 0.65);
+  z-index: 4;
+  white-space: nowrap;
+}
+
+.nexa-ps .s3-ornament {
+  position: absolute;
+  border: 1px solid rgba(12, 12, 12, 0.12);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.nexa-ps .s3-ornament--a {
+  left: 8vw;
+  top: 22vh;
+  width: 12vw;
+  height: 12vw;
+  border-radius: 50%;
+}
+
+.nexa-ps .s3-ornament--b {
+  right: 8vw;
+  bottom: 20vh;
+  width: 8vw;
+  height: 8vw;
+}
+
+/* Anchors */
+.nexa-ps .anchor {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.nexa-ps #anchor-1 {
+  left: 60vw;
+  top: 50vh;
+  height: 58vh;
+  width: 24vh;
+}
+
+.nexa-ps #anchor-2 {
+  left: 27vw;
+  top: 50vh;
+  height: 56vh;
+  width: 26vh;
+}
+
+.nexa-ps #anchor-3 {
+  left: 50vw;
+  top: 52vh;
+  height: 56vh;
+  width: 26vh;
+}
+
+body.debug .nexa-ps .anchor {
+  visibility: visible;
+  outline: 1px dashed #f00;
+}
+
+@media (max-width: 767px) {
+  .nexa-ps {
+    --ps-pad: 5vw;
+  }
+
+  .nexa-ps .hero-copy {
+    left: 7vw;
+    top: 15vh;
+    transform: none;
+  }
+
+  .nexa-ps .eyebrow {
+    font-size: 11px;
+    margin-bottom: 3vw;
+  }
+
+  .nexa-ps .hero-title {
+    font-size: 12vw;
+  }
+
+  .nexa-ps .hero-lede {
+    margin-top: 3vw;
+    max-width: 80vw;
+    font-size: 13px;
+  }
+
+  .nexa-ps .hero-pull {
+    margin-top: 2vw;
+    max-width: 88vw;
+    font-size: 12px;
+  }
+
+  .nexa-ps .s3-portal {
+    width: 46vh;
+    height: 46vh;
+  }
+
+  .nexa-ps .s3-cta {
+    bottom: 5vh;
+    font-size: 11px;
+  }
+
+  .nexa-ps .ps-orbit,
+  .nexa-ps .ps-ring {
+    left: 55vw;
+    top: 55vh;
+    width: 42vh;
+    height: 42vh;
+  }
+
+  .nexa-ps .ps-chips {
+    left: 7vw;
+    bottom: auto;
+    top: 72vh;
+  }
+
+  .nexa-ps .hero-actions {
+    margin-top: 5vw;
+    gap: 5vw;
+  }
+
+  .nexa-ps .btn,
+  .nexa-ps .link {
+    font-size: 13px;
+  }
+
+  .nexa-ps .hero-note {
+    left: 7vw;
+    top: 80vh;
+    width: 70vw;
+  }
+
+  .nexa-ps .hero-note strong {
+    font-size: 13px;
+  }
+
+  .nexa-ps .hero-note p {
+    font-size: 12px;
+  }
+
+  .nexa-ps .scroll-cue {
+    display: none;
+  }
+
+  .nexa-ps #anchor-1 {
+    left: 62vw;
+    top: 58vh;
+    height: 32vh;
+  }
+
+  .nexa-ps #anchor-2 {
+    left: 50vw;
+    top: 30vh;
+    height: 32vh;
+  }
+
+  .nexa-ps .flavour {
+    left: 5vw;
+    top: 52vh;
+    width: 90vw;
+    transform: none;
+    padding: 5vw;
+  }
+
+  .nexa-ps .flavour h2 {
+    font-size: 10vw;
+  }
+
+  .nexa-ps .flavour .sub {
+    font-size: 14px;
+    max-width: none;
+    margin-top: 3vw;
+  }
+
+  .nexa-ps .flavour .body {
+    font-size: 13px;
+    margin-top: 3vw;
+  }
+
+  .nexa-ps .flavour-specs {
+    margin-top: 4vw;
+    padding-top: 4vw;
+    gap: 2vw;
+  }
+
+  .nexa-ps .word {
+    font-size: 14vw;
+  }
+
+  .nexa-ps .word.left {
+    left: 50vw;
+    top: 20vh;
+  }
+
+  .nexa-ps .word.right {
+    left: 50vw;
+    top: 82vh;
+  }
+
+  .nexa-ps .s3-tag {
+    top: 12vh;
+  }
+
+  .nexa-ps .s3-caption {
+    bottom: 10vh;
+    white-space: normal;
+    text-align: center;
+    width: 80vw;
+  }
+
+  .nexa-ps .s3-ornament--a,
+  .nexa-ps .s3-ornament--b {
+    display: none;
+  }
+
+  .nexa-ps #anchor-3 {
+    left: 50vw;
+    top: 52vh;
+    height: 40vh;
+  }
+
+  .nexa-ps .glow {
+    width: 34vh;
+    height: 34vh;
+  }
+
+  .nexa-ps .ground {
+    top: 72vh;
+    width: 16vh;
+  }
+}

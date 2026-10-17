@@ -1,0 +1,616 @@
+@import "tailwindcss";
+
+/*
+  Silent Gallery — premium = restraint.
+  Near-black + warm bone accent. No neon, no brass template gold.
+*/
+:root {
+  --color-bg: #0c0c0c;
+  --color-surface: #161616;
+  --color-border: #2a2a2a;
+  --color-accent: #d8d6d2;
+  --color-accent-dim: #9c9a96;
+  --color-text: #f2f1ef;
+  --color-text-muted: #9c9a96;
+  --color-text-faint: #6a6864;
+  --color-buy: #ffffff;
+  --color-buy-text: #0c0c0c;
+  --color-danger: #d4786a;
+
+  --motion-instant: 100ms;
+  --motion-fast: 180ms;
+  --motion-base: 280ms;
+  --motion-slow: 500ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  --font-display: var(--font-body);
+
+  --shadow-contact:
+    0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 20px 50px rgba(0, 0, 0, 0.55);
+}
+
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text);
+  --color-accent: var(--color-accent);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+h1,
+h2,
+.nexa-display {
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+.nexa-input {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: 0.75rem 0.9rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  outline: none;
+  transition:
+    border-color var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-fast) var(--ease-out);
+}
+
+.nexa-input::placeholder {
+  color: var(--color-text-faint);
+}
+
+.nexa-input:focus {
+  border-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+  box-shadow: 0 0 0 1px var(--color-bg), 0 0 0 2px var(--color-accent);
+}
+
+/* Luxury form fields — Early Access / waitlist */
+.nexa-field-luxe {
+  position: relative;
+  display: block;
+}
+
+.nexa-field-luxe__label {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.nexa-input-luxe {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(216, 214, 210, 0.35);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  padding: 1.05rem 0.9rem 0.95rem;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  color: var(--color-text);
+  outline: none;
+  transition:
+    border-color var(--motion-base) var(--ease-out),
+    background var(--motion-base) var(--ease-out),
+    box-shadow var(--motion-base) var(--ease-out);
+}
+
+.nexa-input-luxe::placeholder {
+  color: rgba(154, 152, 148, 0.45);
+  font-weight: 300;
+}
+
+.nexa-input-luxe:focus {
+  border-color: rgba(216, 214, 210, 0.35);
+  border-bottom-color: var(--color-accent);
+  background: linear-gradient(
+    180deg,
+    rgba(126, 184, 196, 0.08),
+    rgba(255, 255, 255, 0.03)
+  );
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.nexa-field-luxe__line {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent),
+    transparent
+  );
+  transform: scaleX(0);
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.nexa-field-luxe:focus-within .nexa-field-luxe__line {
+  transform: scaleX(1);
+}
+
+/* Why Nexa — quiet luxury wash (MOTION_MAP / motion-kit luxury) */
+.nexa-why {
+  background: #0c0c0c;
+  transition: background 0.6s var(--ease-out);
+}
+
+.nexa-why .why-mesh {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  background:
+    radial-gradient(ellipse 50% 40% at 85% 15%, rgba(126, 184, 196, 0.1), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 10% 80%, rgba(216, 214, 210, 0.07), transparent 50%),
+    linear-gradient(180deg, #101418 0%, #0c0c0c 45%, #12161c 100%);
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.nexa-why.nexa-why-hot .why-mesh {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 55% 45% at 80% 20%, rgba(126, 184, 196, 0.2), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 15% 75%, rgba(216, 214, 210, 0.14), transparent 50%),
+    linear-gradient(180deg, #141a22 0%, #0e1218 50%, #161c24 100%);
+}
+
+.nexa-why .why-grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.nexa-why .why-accent-line {
+  background: linear-gradient(90deg, #f2f1ef, #7eb8c4 50%, #d8d6d2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.nexa-why .why-card-quiet {
+  transition:
+    background var(--motion-base) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out);
+}
+
+.nexa-why.nexa-why-hot .why-card-quiet {
+  background: #0e1218;
+}
+
+.nexa-why .why-card-quiet:hover {
+  background: #141a22;
+}
+
+.nexa-why .why-card-bar {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), #7eb8c4);
+  transform: scaleX(0);
+  transform-origin: inline-end;
+  transition: transform 0.45s var(--ease-out);
+}
+
+.nexa-why .why-card-quiet:hover .why-card-bar {
+  transform: scaleX(1);
+}
+
+/* Atmospheric section plates — not flat black */
+.nexa-atmosphere {
+  position: relative;
+  isolation: isolate;
+}
+
+.nexa-atmosphere::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 45% at 70% 0%, rgba(126, 184, 196, 0.08), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 20% 100%, rgba(216, 214, 210, 0.06), transparent 50%),
+    linear-gradient(180deg, #101214 0%, #0c0c0c 40%, #121416 100%);
+}
+
+.nexa-atmosphere > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Studio depth chapters — mid-site color morph (deep sites / motion-kit studio) */
+html {
+  transition:
+    background-color 0.7s var(--ease-out),
+    color 0.7s var(--ease-out);
+}
+
+html[data-depth="ink"] {
+  --color-bg: #0c0c0c;
+  --color-surface: #161616;
+  --color-accent: #d8d6d2;
+}
+
+html[data-depth="steel"] {
+  --color-bg: #0e1218;
+  --color-surface: #161c24;
+  --color-accent: #b8c0c8;
+  --color-border: #2a323c;
+}
+
+html[data-depth="bone"] {
+  --color-bg: #12110f;
+  --color-surface: #1a1916;
+  --color-accent: #e4e0d8;
+  --color-border: #2e2c28;
+}
+
+html[data-depth="cyan"] {
+  --color-bg: #0c1418;
+  --color-surface: #121c22;
+  --color-accent: #7eb8c4;
+  --color-border: #243038;
+}
+
+html[data-depth] body {
+  background: var(--color-bg);
+  transition: background-color 0.7s var(--ease-out);
+}
+
+.nexa-depth-wash {
+  position: relative;
+}
+
+.nexa-depth-wash::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-out);
+  z-index: 0;
+}
+
+html[data-depth="steel"] .nexa-depth-wash[data-depth="steel"]::after,
+html[data-depth="bone"] .nexa-depth-wash[data-depth="bone"]::after,
+html[data-depth="cyan"] .nexa-depth-wash[data-depth="cyan"]::after,
+html[data-depth="ink"] .nexa-depth-wash[data-depth="ink"]::after {
+  opacity: 1;
+}
+
+.nexa-depth-wash[data-depth="steel"]::after {
+  background: radial-gradient(
+    ellipse 70% 50% at 80% 20%,
+    rgba(126, 184, 196, 0.12),
+    transparent 55%
+  );
+}
+
+.nexa-depth-wash[data-depth="bone"]::after {
+  background: radial-gradient(
+    ellipse 60% 45% at 20% 30%,
+    rgba(216, 214, 210, 0.1),
+    transparent 55%
+  );
+}
+
+.nexa-depth-wash[data-depth="cyan"]::after {
+  background: radial-gradient(
+    ellipse 65% 50% at 50% 0%,
+    rgba(126, 184, 196, 0.16),
+    transparent 55%
+  );
+}
+
+.nexa-depth-wash > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Headphones drop into payment plate */
+@keyframes nexaPayDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-28%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nexa-pay-drop {
+  animation: nexaPayDrop 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexa-pay-drop {
+    animation: none;
+  }
+}
+
+.nexa-glass {
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-contact);
+  border-radius: var(--radius-md);
+}
+
+.nexa-btn-buy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--color-buy);
+  color: var(--color-buy-text);
+  padding: 0.85rem 1.85rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  box-shadow: none;
+  transition: opacity var(--motion-fast) var(--ease-out),
+    transform var(--motion-instant) var(--ease-out);
+}
+
+.nexa-btn-buy:hover {
+  opacity: 0.92;
+}
+
+.nexa-btn-buy:active:not(.nexa-magnetic) {
+  transform: scale(0.98);
+}
+
+/* M2 underline links — RTL origin */
+.nexa-footer-link span:last-child,
+.nexa-link-underline::after {
+  transform-origin: inline-start;
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.nexa-btn-accent {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  transition:
+    border-color var(--motion-fast) var(--ease-out),
+    background var(--motion-fast) var(--ease-out),
+    transform var(--motion-instant) var(--ease-out);
+}
+
+.nexa-btn-accent:hover {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+}
+
+.nexa-btn-accent:active {
+  transform: scale(0.98);
+}
+
+.nexa-btn-accent:disabled {
+  opacity: 0.5;
+}
+
+.nexa-sim-badge {
+  position: absolute;
+  inset-inline-end: 0.65rem;
+  top: 0.65rem;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 12, 12, 0.78);
+  backdrop-filter: blur(8px);
+  padding: 0.28rem 0.5rem;
+}
+
+@keyframes nexaFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes nexaCartPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.18);
+  }
+}
+
+@keyframes nexaDrawerInRtl {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.85;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.nexa-cart-badge-pulse {
+  animation: nexaCartPulse var(--motion-fast) var(--ease-out);
+}
+
+.nexa-drawer-panel {
+  animation: nexaDrawerInRtl var(--motion-base) var(--ease-out);
+}
+
+.nexa-reveal {
+  animation: nexaReveal var(--motion-slow) var(--ease-out) both;
+}
+
+@keyframes nexaReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes nexaScrollCue {
+  0%,
+  100% {
+    transform: scaleY(0.55);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleY(1.15);
+    opacity: 1;
+  }
+}
+
+.nexa-scroll-cue-line {
+  animation: nexaScrollCue 1.6s var(--ease-out) infinite;
+}
+
+.nexa-cinema--hot video {
+  will-change: transform, filter;
+}
+
+.nexa-cinema--hot .nexa-cinema-layer {
+  will-change: opacity, transform;
+}
+
+html.nexa-has-magnetic,
+html.nexa-has-magnetic * {
+  cursor: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .nexa-reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .nexa-cinema {
+    height: auto !important;
+  }
+}
+
+/* תפריט נגישות — ת״י 5568 */
+html.nexa-a11y-large {
+  font-size: 112.5%;
+}
+
+html.nexa-a11y-contrast {
+  --color-text: #ffffff;
+  --color-text-muted: #f0eeea;
+  --color-text-faint: #d8d6d2;
+  --color-border: #5a5854;
+  --color-accent: #ffffff;
+  --color-bg: #000000;
+  --color-surface: #0c0c0c;
+}
+
+html.nexa-a11y-motion *,
+html.nexa-a11y-motion *::before,
+html.nexa-a11y-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Immersive Hero — on-load (SSR text already painted) */
+.nexa-hero-enter .nexa-hero-h1 {
+  animation: nexaKinetic 0.75s var(--ease-out) both;
+}
+.nexa-hero-enter .nexa-hero-h2 {
+  animation: nexaReveal 0.65s var(--ease-out) 0.2s both;
+}
+.nexa-hero-enter .nexa-hero-cta {
+  animation: nexaReveal 0.55s var(--ease-out) 0.4s both;
+}
+
+.nexa-kinetic {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.nexa-kinetic-inner {
+  display: inline-block;
+  animation: nexaKinetic 0.9s var(--ease-out) both;
+}
+
+@keyframes nexaKinetic {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+html.nexa-a11y-motion .nexa-kinetic-inner {
+  animation: none;
+  opacity: 1;
+  transform: none;
+  clip-path: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexa-kinetic-inner {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+}

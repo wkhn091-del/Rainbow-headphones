@@ -1,0 +1,5 @@
+Contact: mailto:support@nexaaudio.com
+Preferred-Languages: he, en
+Canonical: https://nexaaudio.co.il/.well-known/security.txt
+Policy: https://nexaaudio.co.il/legal/privacy
+Expires: 2027-10-16T00:00:00.000Z
