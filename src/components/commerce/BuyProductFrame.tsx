@@ -65,9 +65,9 @@ export function BuyProductFrame({ colorId }: Props) {
           aria-hidden
         />
 
-        {/* Full product — always fully visible */}
+        {/* Full product — seated in frame, never clipped by caption */}
         <div
-          className={`absolute inset-[10%_8%_22%] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${flash ? "scale-[1.03] -translate-y-1" : "scale-100"}`}
+          className={`absolute inset-[8%_6%_18%] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${flash ? "scale-[1.02] -translate-y-0.5" : "scale-100"}`}
         >
           <Image
             key={`${colorId}-product`}
@@ -82,7 +82,11 @@ export function BuyProductFrame({ colorId }: Props) {
         </div>
 
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/90 via-black/35 to-transparent"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/50 to-transparent"
           aria-hidden
         />
 

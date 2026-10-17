@@ -188,16 +188,16 @@ export function PaymentMethods({
 
   return (
     <div className={className} aria-label="אמצעי תשלום וצבע">
-      {/* Headphones descend into payment — Quiet / NEXA plate */}
+      {/* Headphones descend into payment — Quiet / NEXA plate (no overflow clip) */}
       <div
-        className="relative mb-4 overflow-hidden border transition-[border-color,box-shadow] duration-500"
+        className="relative mb-4 border transition-[border-color,box-shadow] duration-500"
         style={{
           borderColor: `${color.hex}55`,
           boxShadow: `0 0 40px ${tint.glow}`,
           background: `linear-gradient(105deg, #0a0c10 0%, #1a1e26 45%, ${color.hex}33 100%)`,
         }}
       >
-        <p className="absolute inset-x-0 top-3 z-10 text-center font-[family-name:var(--font-mono)] text-[9px] tracking-[0.28em] text-white/45 uppercase">
+        <p className="relative z-10 pt-3 text-center font-[family-name:var(--font-mono)] text-[9px] tracking-[0.28em] text-white/45 uppercase">
           Silent Gallery
         </p>
 
@@ -212,10 +212,10 @@ export function PaymentMethods({
 
         <div
           key={colorId}
-          className="nexa-pay-drop relative mx-auto h-40 w-full max-w-[220px] sm:h-48"
+          className="nexa-pay-drop relative mx-auto h-52 w-full max-w-[260px] px-2 pt-2 sm:h-60"
         >
           <div
-            className="pointer-events-none absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl sm:h-36 sm:w-36"
+            className="pointer-events-none absolute left-1/2 top-[46%] h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl sm:h-44 sm:w-44"
             style={{ background: tint.glow }}
             aria-hidden
           />
@@ -225,12 +225,12 @@ export function PaymentMethods({
             fill
             className="object-contain object-center drop-shadow-[0_20px_40px_rgba(0,0,0,0.7)] transition-[filter] duration-500"
             style={{ filter: tint.filter }}
-            sizes="220px"
+            sizes="260px"
           />
         </div>
 
         {interactive ? (
-          <div className="relative z-10 flex flex-col items-center gap-2 pb-4">
+          <div className="relative z-10 flex flex-col items-center gap-2 border-t border-white/10 px-3 py-4">
             <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.18em] text-white/50 uppercase">
               צבע בסליקה
             </p>

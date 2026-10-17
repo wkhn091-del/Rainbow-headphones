@@ -59,13 +59,15 @@ body.nexa-ps-on-color .nexa-ps {
   z-index: 3;
   background: var(--ps-grad);
   color: #0c0c0c;
-  /* Soft plate behind the 3D cans — no hard circle clip */
+  /* Soft seat — large enough that full cans sit inside, not clipped */
   --s3-plate: radial-gradient(
-    ellipse 42% 48% at 50% 52%,
-    rgba(255, 255, 255, 0.35) 0%,
-    rgba(216, 214, 210, 0.12) 42%,
-    transparent 68%
+    ellipse 58% 62% at 50% 48%,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(216, 214, 210, 0.16) 38%,
+    transparent 72%
   );
+  /* Keep 3D clear of next-section seam */
+  padding-bottom: 8vh;
 }
 
 .nexa-ps .s3::before {
@@ -503,25 +505,27 @@ html[dir="rtl"] .nexa-ps .link:hover span {
 .nexa-ps .glow {
   position: absolute;
   left: 50vw;
-  top: 52vh;
-  width: 46vh;
-  height: 46vh;
+  top: 46vh;
+  width: 56vh;
+  height: 56vh;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.28);
   pointer-events: none;
+  z-index: 1;
 }
 
 .nexa-ps .ground {
   position: absolute;
   left: 50vw;
-  top: 81vh;
-  width: 22vh;
+  top: 68vh;
+  width: 28vh;
   height: 3.2vh;
   transform: translate(-50%, -50%);
   background: radial-gradient(closest-side, rgba(7, 7, 8, 0.4), transparent);
   filter: blur(4px);
   pointer-events: none;
+  z-index: 1;
 }
 
 .nexa-ps .word {
@@ -665,23 +669,24 @@ html[dir="rtl"] .nexa-ps .link:hover span {
 
 .nexa-ps #anchor-1 {
   left: 60vw;
-  top: 50vh;
-  height: 58vh;
-  width: 24vh;
+  top: 48vh;
+  height: 48vh;
+  width: 22vh;
 }
 
 .nexa-ps #anchor-2 {
   left: 27vw;
-  top: 50vh;
-  height: 56vh;
-  width: 26vh;
+  top: 48vh;
+  height: 46vh;
+  width: 22vh;
 }
 
+/* Quiet / NEXA — seated inside plate; full silhouette above bottom seam */
 .nexa-ps #anchor-3 {
   left: 50vw;
-  top: 52vh;
-  height: 56vh;
-  width: 26vh;
+  top: 44vh;
+  height: 32vh;
+  width: 16vh;
 }
 
 body.debug .nexa-ps .anchor {
@@ -820,20 +825,20 @@ body.debug .nexa-ps .anchor {
 
   .nexa-ps .word.left {
     left: 50vw;
-    top: 20vh;
+    top: 18vh;
   }
 
   .nexa-ps .word.right {
     left: 50vw;
-    top: 82vh;
+    top: 78vh;
   }
 
   .nexa-ps .s3-tag {
-    top: 12vh;
+    top: 10vh;
   }
 
   .nexa-ps .s3-caption {
-    bottom: 10vh;
+    bottom: 12vh;
     white-space: normal;
     text-align: center;
     width: 80vw;
@@ -846,13 +851,19 @@ body.debug .nexa-ps .anchor {
 
   .nexa-ps #anchor-3 {
     left: 50vw;
-    top: 52vh;
-    height: 40vh;
+    top: 42vh;
+    height: 28vh;
+    width: 14vh;
   }
 
   .nexa-ps .glow {
-    width: 34vh;
-    height: 34vh;
+    top: 42vh;
+    width: 48vh;
+    height: 48vh;
+  }
+
+  .nexa-ps .ground {
+    top: 62vh;
   }
 
   .nexa-ps .ground {

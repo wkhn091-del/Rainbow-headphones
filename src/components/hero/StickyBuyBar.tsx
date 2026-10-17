@@ -11,19 +11,39 @@ type Props = {
   onSoldOut?: () => void;
 };
 
+/**
+ * Mobile sticky CTA — only inside #buy, never over ProductScroll (was clipping 3D cans).
+ */
 export function StickyBuyBar({ colorId, onCheckout, onSoldOut }: Props) {
   const [visible, setVisible] = useState(false);
   const soldOut = isColorSoldOut(colorId);
 
   useEffect(() => {
-    const el = document.getElementById("buy-cta");
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setVisible(!entry.isIntersecting),
-      { threshold: 0.15 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    const buy = document.getElementById("buy");
+    const cta = document.getElementById("buy-cta");
+    if (!buy || !cta) return;
+
+    const update = () => {
+      const buyRect = buy.getBoundingClientRect();
+      const ctaRect = cta.getBoundingClientRect();
+      const inBuy =
+        buyRect.top < window.innerHeight * 0.55 && buyRect.bottom > window.innerHeight * 0.35;
+      const ctaOnScreen =
+        ctaRect.top < window.innerHeight - 24 && ctaRect.bottom > 80;
+      setVisible(inBuy && !ctaOnScreen);
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    const lenis = (window as unknown as { __lenis?: { on: Function; off: Function } }).__lenis;
+    lenis?.on?.("scroll", update);
+
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      lenis?.off?.("scroll", update);
+    };
   }, []);
 
   if (!visible) return null;

@@ -45,12 +45,12 @@ export function ProductScroll() {
       onLeaveBack: () => document.body.classList.remove("nexa-ps-on-color"),
     });
 
-    // Force-hide fixed canvas when buy section enters — never overlap commerce
+    // Hide fixed canvas before #buy paints over the Quiet/NEXA seat
     const buyEl = document.getElementById("buy");
     const buyHide = buyEl
       ? ScrollTrigger.create({
           trigger: buyEl,
-          start: "top 85%",
+          start: "top 95%",
           onEnter: () => {
             const c = document.getElementById("nexa-ps-canvas");
             if (c) {
@@ -61,7 +61,7 @@ export function ProductScroll() {
           onLeaveBack: () => {
             const c = document.getElementById("nexa-ps-canvas");
             const ps = root.getBoundingClientRect();
-            if (c && ps.bottom > 80 && ps.top < window.innerHeight) {
+            if (c && ps.bottom > 120 && ps.top < window.innerHeight * 0.9) {
               c.style.opacity = "1";
               c.style.visibility = "visible";
             }
@@ -239,21 +239,18 @@ export function ProductScroll() {
               הרגע שבו הרעש נעלם — והמיקוד חוזר
             </p>
             <p className="hero-pull">
-              לא עוד «אולי אקנה». גללו ותרגישו למה אנשים משריינים עכשיו.
+              גללו. תראו. תרגישו את המשקל לפני שמחליטים.
             </p>
             <div className="hero-actions">
-              <a className="btn" href="#buy">
-                לרכישה
-              </a>
               <a className="link" href="#nexa-flavour">
-                לפירוק <span>←</span>
+                המשיכו לפירוק <span>←</span>
               </a>
             </div>
           </div>
           <div className="hero-note">
             <span className="rule" />
             <strong>ברזל. רשת. שקט.</strong>
-            <p>מי שמרגיש את המשקל — כבר יודע. מהסרט אל המודל.</p>
+            <p>מהסרט אל המודל — בלי לחץ קופה כאן.</p>
           </div>
           <div className="scroll-cue">
             <span>Scroll</span>
@@ -280,17 +277,17 @@ export function ProductScroll() {
           <div className="flavour">
             <p className="flavour-kicker">Feel first</p>
             <h2 className="mask">
-              <span>תרגישו לפני שקונים</span>
+              <span>תרגישו את השקט</span>
             </h2>
             <p className="sub">קשת טיטניום · כריות אקוסטיות · דרייבר 40 מ״מ</p>
             <p className="body">
-              סובבו בתלת־ממד. תראו את הזווית. תרגישו את המשקל — ואז תלחצו
-              לתשלום בלי היסוס.
+              סובבו בתלת־ממד. תראו את הזווית והמשקל — בלי החלטה עדיין. רק
+              התנסות.
             </p>
             <ul className="flavour-pull">
               <li>«סוף סוף שקט בזום»</li>
-              <li>«48 שעות בלי ציד שקע»</li>
-              <li>«14 יום — בלי אותיות קטנות»</li>
+              <li>«יום שלם בלי ציד שקע»</li>
+              <li>«משקל שמורגש — לא מעיק»</li>
             </ul>
             <ul className="flavour-specs">
               <li>
@@ -337,9 +334,6 @@ export function ProductScroll() {
             <span>Nexa</span>
           </h2>
           <p className="s3-caption">עיצוב שלא צועק — שקט שכן</p>
-          <a className="s3-cta" href="#buy">
-            לשריין צבע עכשיו
-          </a>
           <div
             className="anchor"
             id="anchor-3"

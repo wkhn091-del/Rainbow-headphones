@@ -407,11 +407,22 @@ export function startHeadphones3D(canvas: HTMLCanvasElement): Headphones3DHandle
 
     // Soft entrance motion only — can stays fully opaque
     const ip = Math.max(introP, 0.35);
-    const pyIntro = py + vh(10) * (1 - introP);
+    // Keep cans above the bottom seam (was getting swallowed by next section / sticky)
+    const bottomSafe = isMobile() ? vh(14) : vh(10);
+    const pyIntro = Math.min(
+      py + vh(10) * (1 - introP),
+      window.innerHeight - h * 0.55 - bottomSafe,
+    );
     const world = pixelToWorld(px, pyIntro, h, camera);
     const rzOff = 18 * (1 - introP);
     const ryOff = -55 * (1 - introP);
     const scaleMul = THREE.MathUtils.lerp(0.9, 1, ip);
+    // Last plate (Quiet/NEXA): shrink so full silhouette fits the seat
+    const lastIdx = anchors.length - 1;
+    const onLast =
+      A === anchors[lastIdx] ||
+      (seg === lastIdx - 1 && t > 0.55);
+    const fitMul = onLast ? (isMobile() ? 0.62 : 0.68) : 0.92;
 
     // Guard against bad layout numbers killing the pose
     const safeScale = Number.isFinite(world.scale) && world.scale > 0 ? world.scale : 2.2;
@@ -419,8 +430,7 @@ export function startHeadphones3D(canvas: HTMLCanvasElement): Headphones3DHandle
     const sy = Number.isFinite(world.y) ? world.y : 0;
 
     canGroup.position.set(sx, sy, 0);
-    // Slightly larger than anchor height so the can reads clearly on mobile
-    canGroup.scale.setScalar(safeScale * scaleMul);
+    canGroup.scale.setScalar(safeScale * scaleMul * fitMul);
     canGroup.rotation.set(deg(rx || 0), deg((ry || 0) + ryOff), deg((rz || 0) + rzOff));
     applyIntroMats(1);
 
@@ -469,7 +479,7 @@ export function startHeadphones3D(canvas: HTMLCanvasElement): Headphones3DHandle
       // Hide as soon as the block mostly leaves — never float over #buy
       const buy = document.getElementById("buy");
       const buyTop = buy?.getBoundingClientRect().top ?? Infinity;
-      const buyCovering = buyTop < window.innerHeight * 0.85;
+      const buyCovering = buyTop < window.innerHeight * 0.95;
       showCanvas(
         Boolean(
           e?.isIntersecting &&
