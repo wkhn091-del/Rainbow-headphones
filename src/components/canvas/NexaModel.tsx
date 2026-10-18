@@ -6,6 +6,7 @@ import gsap from "gsap";
 import * as THREE from "three";
 import type { NexaColor } from "@/lib/catalog";
 import { NEXA_MODEL_URL } from "@/lib/3d/model-source";
+import { useIsMobile } from "@/lib/client/mobile";
 import { useNexaExplode } from "./useNexaExplode";
 
 type Props = {
@@ -164,6 +165,7 @@ export function NexaModel({
   const chipRef = useRef<THREE.Object3D>(null);
   const paintRef = useRef<Paintable[]>([]);
   const firstColor = useRef(true);
+  const mobile = useIsMobile();
 
   const clone = useMemo(() => {
     const c = scene.clone(true);
@@ -248,9 +250,17 @@ export function NexaModel({
     },
   );
 
+  const baseScale = explodeOnScroll
+    ? mobile
+      ? 5.6
+      : 7.4
+    : mobile
+      ? 5.2
+      : 6.6;
+
   return (
     <Center cacheKey="nexa-monitor-cans">
-      <group ref={groupRef} scale={explodeOnScroll ? 7.4 : 6.6}>
+      <group ref={groupRef} scale={baseScale}>
         <primitive object={clone.root} />
 
         <mesh position={[0.085, 0.015, 0.035]}>

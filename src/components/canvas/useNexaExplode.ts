@@ -155,16 +155,23 @@ export function useNexaExplode(refs: NexaExplodeRefs, options: Options = {}) {
         return;
       }
 
+      const mobile =
+        typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+      const startScale = mobile ? 1.55 : 2.35;
+      const endScale = mobile ? 0.88 : 1;
+      const spread = mobile ? 0.72 : 1;
+
       // Hero entrance scale — Drop then Explode across the pinned scrub
-      gsap.set(group.scale, { x: 2.35, y: 2.35, z: 2.35 });
-      gsap.set(group.position, { y: 0.12 });
+      gsap.set(group.scale, { x: startScale, y: startScale, z: startScale });
+      gsap.set(group.position, { y: mobile ? 0.06 : 0.12 });
 
       tl = gsap.timeline({
         scrollTrigger: {
           trigger,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.35,
+          scrub: mobile ? 1.05 : 1.35,
+          invalidateOnRefresh: true,
           onUpdate: (self) => onProgress?.(self.progress),
         },
       });
@@ -172,7 +179,13 @@ export function useNexaExplode(refs: NexaExplodeRefs, options: Options = {}) {
       // 0 → ~0.28 — The Drop
       tl.to(
         group.scale,
-        { x: 1, y: 1, z: 1, ease: "power2.out", duration: 0.28 },
+        {
+          x: endScale,
+          y: endScale,
+          z: endScale,
+          ease: "power2.out",
+          duration: 0.28,
+        },
         0,
       );
       tl.to(group.position, { y: 0, ease: "power2.out", duration: 0.28 }, 0);
@@ -182,38 +195,50 @@ export function useNexaExplode(refs: NexaExplodeRefs, options: Options = {}) {
         0,
       );
 
-      // ~0.28 → 1 — Exploded view
+      // ~0.28 → 1 — Exploded view (tighter on mobile so parts stay on-screen)
       const e = 0.28;
       tl.to(
         group.rotation,
-        { y: rest.rotY + 0.38, x: rest.rotX - 0.06, duration: 0.72 },
+        {
+          y: rest.rotY + 0.38 * spread,
+          x: rest.rotX - 0.06,
+          duration: 0.72,
+        },
         e,
       );
       tl.to(
         earcupL.position,
-        { x: rest.earcupL.x - 0.14, z: rest.earcupL.z - 0.02, duration: 0.55 },
+        {
+          x: rest.earcupL.x - 0.14 * spread,
+          z: rest.earcupL.z - 0.02,
+          duration: 0.55,
+        },
         e,
       );
       tl.to(
         earcupR.position,
-        { x: rest.earcupR.x + 0.14, z: rest.earcupR.z - 0.02, duration: 0.55 },
+        {
+          x: rest.earcupR.x + 0.14 * spread,
+          z: rest.earcupR.z - 0.02,
+          duration: 0.55,
+        },
         e,
       );
       tl.to(
         cushionL.position,
-        { x: rest.cushionL.x - 0.24, duration: 0.5 },
+        { x: rest.cushionL.x - 0.24 * spread, duration: 0.5 },
         e + 0.06,
       );
       tl.to(
         cushionR.position,
-        { x: rest.cushionR.x + 0.24, duration: 0.5 },
+        { x: rest.cushionR.x + 0.24 * spread, duration: 0.5 },
         e + 0.06,
       );
       tl.to(
         driverL.position,
         {
-          x: rest.driverL.x - 0.1,
-          z: rest.driverL.z + 0.06,
+          x: rest.driverL.x - 0.1 * spread,
+          z: rest.driverL.z + 0.06 * spread,
           duration: 0.48,
         },
         e + 0.1,
@@ -221,8 +246,8 @@ export function useNexaExplode(refs: NexaExplodeRefs, options: Options = {}) {
       tl.to(
         driverR.position,
         {
-          x: rest.driverR.x + 0.1,
-          z: rest.driverR.z + 0.05,
+          x: rest.driverR.x + 0.1 * spread,
+          z: rest.driverR.z + 0.05 * spread,
           duration: 0.48,
         },
         e + 0.1,
@@ -230,15 +255,15 @@ export function useNexaExplode(refs: NexaExplodeRefs, options: Options = {}) {
       tl.to(
         chip.position,
         {
-          y: rest.chip.y - 0.05,
-          z: rest.chip.z + 0.09,
+          y: rest.chip.y - 0.05 * spread,
+          z: rest.chip.z + 0.09 * spread,
           duration: 0.45,
         },
         e + 0.14,
       );
       tl.to(
         headband.position,
-        { y: rest.headband.y + 0.12, duration: 0.55 },
+        { y: rest.headband.y + 0.12 * spread, duration: 0.55 },
         e,
       );
     };

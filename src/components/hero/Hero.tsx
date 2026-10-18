@@ -142,7 +142,7 @@ export function Hero() {
 
           <div className="order-1 lg:order-2 lg:sticky lg:top-24">
             <div
-              className="relative aspect-[4/5] overflow-hidden border border-white/12 bg-[#0a0a0c] sm:aspect-[5/6]"
+              className="relative aspect-[1/1] overflow-hidden border border-white/12 bg-[#0a0a0c] sm:aspect-[4/5] lg:aspect-[5/6]"
               style={{ boxShadow: `0 0 48px ${color.hex}33` }}
             >
               <div className="absolute inset-0">
@@ -155,18 +155,18 @@ export function Hero() {
                   />
                 ) : null}
               </div>
-              <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-4">
-                <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-white/60 uppercase">
+              <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3 sm:p-4">
+                <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.18em] text-white/60 uppercase sm:text-[10px] sm:tracking-[0.2em]">
                   Live material
                 </p>
                 <p
-                  className="border border-white/15 bg-black/50 px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.16em] uppercase backdrop-blur-sm"
+                  className="border border-white/15 bg-black/50 px-2 py-1 font-[family-name:var(--font-mono)] text-[9px] tracking-[0.14em] uppercase backdrop-blur-sm sm:text-[10px] sm:tracking-[0.16em]"
                   style={{ color: color.hex }}
                 >
                   {color.nameEn}
                 </p>
               </div>
-              <p className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-5 pt-16 text-sm text-white/70">
+              <p className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-4 pt-14 text-xs leading-relaxed text-white/70 sm:p-5 sm:pt-16 sm:text-sm">
                 לחיצה על צבע מעדכנת את המודל עצמו — בלי תמונות סטטיות
               </p>
             </div>

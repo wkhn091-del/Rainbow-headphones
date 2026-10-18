@@ -9,6 +9,7 @@ import { NexaModel } from "./NexaModel";
 import { BlueprintStage } from "./BlueprintStage";
 import { StudioEnvironment } from "./StudioEnvironment";
 import { useIsClient } from "@/lib/client/mounted";
+import { useIsMobile } from "@/lib/client/mobile";
 
 type Props = {
   color: NexaColor;
@@ -19,7 +20,7 @@ type Props = {
 };
 
 /**
- * Cold Studio WebGL — 5-node blueprint + line HUD (no drei Html portals).
+ * Cold Studio WebGL — mobile: lower DPR, farther camera, no blueprint clutter.
  */
 export function CanvasMount({
   color,
@@ -29,10 +30,10 @@ export function CanvasMount({
   showBlueprint = true,
 }: Props) {
   const ready = useIsClient();
+  const mobile = useIsMobile();
   const rafRef = useRef(0);
   const lastRef = useRef(-1);
 
-  // Throttle progress → DOM so GSAP scrub doesn't thrash React every frame
   const handleProgress = useCallback(
     (p: number) => {
       if (!onProgress) return;
@@ -50,6 +51,9 @@ export function CanvasMount({
   if (!ready) return null;
 
   const fillViewport = explodeOnScroll;
+  const blueprint = showBlueprint && !mobile;
+  const camZ = fillViewport ? (mobile ? 2.55 : 2.15) : mobile ? 2.7 : 2.45;
+  const fov = fillViewport ? (mobile ? 38 : 32) : mobile ? 40 : 36;
 
   return (
     <div
@@ -58,16 +62,16 @@ export function CanvasMount({
       <Canvas
         frameloop="always"
         camera={{
-          position: fillViewport ? [0.15, 0.2, 2.15] : [0.1, 0.12, 2.45],
-          fov: fillViewport ? 32 : 36,
+          position: [mobile ? 0.08 : 0.15, mobile ? 0.12 : 0.2, camZ],
+          fov,
           near: 0.05,
           far: 80,
         }}
-        dpr={[1, 1.75]}
+        dpr={mobile ? [1, 1.25] : [1, 1.75]}
         gl={{
-          antialias: true,
+          antialias: !mobile,
           alpha: false,
-          powerPreference: "high-performance",
+          powerPreference: mobile ? "default" : "high-performance",
         }}
         style={{ width: "100%", height: "100%", display: "block" }}
         onCreated={({ gl, scene, camera }) => {
@@ -75,16 +79,16 @@ export function CanvasMount({
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 0.95;
           scene.background = new THREE.Color("#0c0c0c");
-          camera.lookAt(0, 0.1, 0);
+          camera.lookAt(0, 0.08, 0);
         }}
       >
         <AdaptiveDpr pixelated />
         <StudioEnvironment />
-        <ambientLight intensity={1.1} color="#e4e8f0" />
+        <ambientLight intensity={mobile ? 1.25 : 1.1} color="#e4e8f0" />
         <hemisphereLight args={["#f0f2f6", "#1a1a1e", 0.85]} />
         <directionalLight
           position={[2.5, 3.5, 2]}
-          intensity={2.2}
+          intensity={mobile ? 1.8 : 2.2}
           color="#ffffff"
         />
         <directionalLight
@@ -92,12 +96,14 @@ export function CanvasMount({
           intensity={1.0}
           color="#9eb4c8"
         />
-        <pointLight
-          position={[0.8, -0.2, 1.2]}
-          intensity={0.8}
-          color="#D8D6D2"
-          distance={6}
-        />
+        {!mobile ? (
+          <pointLight
+            position={[0.8, -0.2, 1.2]}
+            intensity={0.8}
+            color="#D8D6D2"
+            distance={6}
+          />
+        ) : null}
 
         <Suspense
           fallback={
@@ -113,18 +119,18 @@ export function CanvasMount({
             onProgress={handleProgress}
             explodeOnScroll={explodeOnScroll}
           />
-          {showBlueprint ? <BlueprintStage /> : null}
+          {blueprint ? <BlueprintStage /> : null}
         </Suspense>
 
         <ContactShadows
           position={[0, -0.95, 0]}
-          opacity={0.5}
+          opacity={mobile ? 0.35 : 0.5}
           scale={8}
-          blur={2.2}
+          blur={mobile ? 1.6 : 2.2}
           far={3}
           color="#000000"
         />
-        {showBlueprint ? (
+        {blueprint ? (
           <gridHelper
             args={[8, 16, "#1a1c22", "#101114"]}
             position={[0, -0.96, 0]}

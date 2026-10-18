@@ -14,20 +14,20 @@ export function StudioBento() {
 
   return (
     <section
-      className="nexa-atmosphere relative z-10 border-t border-white/10 px-5 py-24 sm:px-8"
+      className="nexa-atmosphere relative z-10 border-t border-white/10 px-4 py-16 sm:px-8 sm:py-24"
       data-depth="steel"
       aria-label="מארז אולפן"
     >
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
+        <div className="flex flex-wrap items-end justify-between gap-4 sm:gap-6">
+          <div className="min-w-0 flex-1">
             <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.32em] text-[var(--color-accent)] uppercase">
               Ecosystem
             </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-[clamp(1.8rem,4vw,2.8rem)] tracking-[-0.035em] text-white">
+            <h2 className="mt-3 font-[family-name:var(--font-display)] text-[clamp(1.55rem,6vw,2.8rem)] tracking-[-0.035em] text-white">
               מארז האולפן
             </h2>
-            <p className="mt-3 max-w-md text-sm text-[var(--color-text-muted)]">
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-[var(--color-text-muted)]">
               עמדת טעינה מגנטית וכבל קלוע — בלי רשימה משעממת, בקוביות נקיות.
             </p>
           </div>
@@ -39,8 +39,8 @@ export function StudioBento() {
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-6 md:grid-rows-2 md:gap-4">
-          <article className="group relative min-h-[280px] overflow-hidden border border-white/12 bg-[#121214] md:col-span-4 md:row-span-2 md:min-h-[420px]">
+        <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-12 md:grid-cols-6 md:grid-rows-2 md:gap-4">
+          <article className="group relative min-h-[220px] overflow-hidden border border-white/12 bg-[#121214] sm:min-h-[280px] md:col-span-4 md:row-span-2 md:min-h-[420px]">
             <Image
               src="/images/accessories-atmosphere.jpg"
               alt={dock.nameHe}
@@ -49,25 +49,25 @@ export function StudioBento() {
               sizes="(max-width:768px) 100vw, 66vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 sm:p-8">
+            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4 sm:p-8">
               <div>
                 <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--color-accent)] uppercase">
                   Nexa Dock
                 </p>
-                <h3 className="mt-2 text-xl text-white sm:text-2xl">{dock.nameHe}</h3>
+                <h3 className="mt-2 text-lg text-white sm:text-2xl">{dock.nameHe}</h3>
                 <p className="mt-1 text-sm text-white/55">טעינה בלי כבל · על השולחן</p>
               </div>
               <button
                 type="button"
                 onClick={() => add({ sku: dock.sku, qty: 1 })}
-                className="nexa-btn-buy shrink-0 px-5 py-3 text-sm"
+                className="nexa-btn-buy w-full shrink-0 px-5 py-3 text-sm sm:w-auto"
               >
                 ₪{dock.priceIls}
               </button>
             </div>
           </article>
 
-          <article className="group relative min-h-[200px] overflow-hidden border border-white/12 bg-[#121214] md:col-span-2">
+          <article className="group relative min-h-[180px] overflow-hidden border border-white/12 bg-[#121214] sm:min-h-[200px] md:col-span-2">
             <Image
               src="/images/lifestyle/nexa-real-parts.jpg"
               alt={link.nameHe}

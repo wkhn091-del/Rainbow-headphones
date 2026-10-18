@@ -72,10 +72,14 @@ export function CinematicPreloader({ onDone }: Props) {
       },
     );
 
-    // Safety unlock
-    const safety = window.setTimeout(() => {
-      target = 100;
-    }, 9000);
+    // Faster unlock on mobile / slow networks
+    const mobile = window.matchMedia("(max-width: 767px)").matches;
+    const safety = window.setTimeout(
+      () => {
+        target = 100;
+      },
+      mobile ? 4500 : 9000,
+    );
 
     return () => {
       cancelled = true;
@@ -89,7 +93,7 @@ export function CinematicPreloader({ onDone }: Props) {
 
   return (
     <div
-      className={`fixed inset-0 z-[120] flex flex-col items-center justify-center bg-[#050505] transition-opacity duration-500 ${
+      className={`fixed inset-0 z-[120] flex flex-col items-center justify-center bg-[#050505] px-6 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] transition-opacity duration-500 ${
         leaving ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
       aria-busy={!leaving}
@@ -98,11 +102,11 @@ export function CinematicPreloader({ onDone }: Props) {
       <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.42em] text-white/35 uppercase">
         Nexa Pro 3D
       </p>
-      <p className="mt-8 font-[family-name:var(--font-mono)] text-[clamp(2.8rem,10vw,5rem)] font-medium tabular-nums tracking-[-0.04em] text-white">
+      <p className="mt-8 font-[family-name:var(--font-mono)] text-[clamp(2.4rem,12vw,5rem)] font-medium tabular-nums tracking-[-0.04em] text-white">
         {String(pct).padStart(2, "0")}
         <span className="text-white/35">%</span>
       </p>
-      <div className="mt-8 h-px w-40 overflow-hidden bg-white/10">
+      <div className="mt-8 h-px w-[min(10rem,55vw)] overflow-hidden bg-white/10">
         <div
           className="h-full bg-white/70 transition-[width] duration-150 ease-out"
           style={{ width: `${pct}%` }}
