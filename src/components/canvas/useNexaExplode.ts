@@ -21,6 +21,8 @@ export type NexaExplodeRefs = {
 
 type Options = {
   reducedMotion?: boolean;
+  /** false = keep assembled rest pose (checkout configurator) */
+  enabled?: boolean;
   trigger?: string;
   onProgress?: (progress: number) => void;
 };
@@ -51,6 +53,7 @@ function ready(refs: NexaExplodeRefs) {
 export function useNexaExplode(refs: NexaExplodeRefs, options: Options = {}) {
   const {
     reducedMotion = false,
+    enabled = true,
     trigger = ".nexa-scroll-section",
     onProgress,
   } = options;
@@ -99,6 +102,13 @@ export function useNexaExplode(refs: NexaExplodeRefs, options: Options = {}) {
       gsap.set(driverL.position, rest.driverL);
       gsap.set(driverR.position, rest.driverR);
       gsap.set(chip.position, rest.chip);
+      gsap.set(group.scale, { x: 1, y: 1, z: 1 });
+      gsap.set(group.position, { y: 0 });
+
+      if (!enabled) {
+        onProgress?.(0);
+        return;
+      }
 
       if (reducedMotion) {
         gsap.set(earcupL.position, {
@@ -145,45 +155,92 @@ export function useNexaExplode(refs: NexaExplodeRefs, options: Options = {}) {
         return;
       }
 
+      // Hero entrance scale — Drop then Explode across the pinned scrub
+      gsap.set(group.scale, { x: 2.35, y: 2.35, z: 2.35 });
+      gsap.set(group.position, { y: 0.12 });
+
       tl = gsap.timeline({
         scrollTrigger: {
           trigger,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.5,
+          scrub: 1.35,
           onUpdate: (self) => onProgress?.(self.progress),
         },
       });
 
-      tl.to(group.rotation, { y: rest.rotY + 0.3, x: rest.rotX - 0.04, z: 0 }, 0);
+      // 0 → ~0.28 — The Drop
+      tl.to(
+        group.scale,
+        { x: 1, y: 1, z: 1, ease: "power2.out", duration: 0.28 },
+        0,
+      );
+      tl.to(group.position, { y: 0, ease: "power2.out", duration: 0.28 }, 0);
+      tl.to(
+        group.rotation,
+        { y: rest.rotY + 0.12, x: rest.rotX - 0.02, z: 0, duration: 0.28 },
+        0,
+      );
+
+      // ~0.28 → 1 — Exploded view
+      const e = 0.28;
+      tl.to(
+        group.rotation,
+        { y: rest.rotY + 0.38, x: rest.rotX - 0.06, duration: 0.72 },
+        e,
+      );
       tl.to(
         earcupL.position,
-        { x: rest.earcupL.x - 0.14, z: rest.earcupL.z - 0.02 },
-        0,
+        { x: rest.earcupL.x - 0.14, z: rest.earcupL.z - 0.02, duration: 0.55 },
+        e,
       );
       tl.to(
         earcupR.position,
-        { x: rest.earcupR.x + 0.14, z: rest.earcupR.z - 0.02 },
-        0,
+        { x: rest.earcupR.x + 0.14, z: rest.earcupR.z - 0.02, duration: 0.55 },
+        e,
       );
-      tl.to(cushionL.position, { x: rest.cushionL.x - 0.22 }, 0.08);
-      tl.to(cushionR.position, { x: rest.cushionR.x + 0.22 }, 0.08);
+      tl.to(
+        cushionL.position,
+        { x: rest.cushionL.x - 0.24, duration: 0.5 },
+        e + 0.06,
+      );
+      tl.to(
+        cushionR.position,
+        { x: rest.cushionR.x + 0.24, duration: 0.5 },
+        e + 0.06,
+      );
       tl.to(
         driverL.position,
-        { x: rest.driverL.x - 0.09, z: rest.driverL.z + 0.05 },
-        0.12,
+        {
+          x: rest.driverL.x - 0.1,
+          z: rest.driverL.z + 0.06,
+          duration: 0.48,
+        },
+        e + 0.1,
       );
       tl.to(
         driverR.position,
-        { x: rest.driverR.x + 0.09, z: rest.driverR.z + 0.04 },
-        0.12,
+        {
+          x: rest.driverR.x + 0.1,
+          z: rest.driverR.z + 0.05,
+          duration: 0.48,
+        },
+        e + 0.1,
       );
       tl.to(
         chip.position,
-        { y: rest.chip.y - 0.04, z: rest.chip.z + 0.08 },
-        0.18,
+        {
+          y: rest.chip.y - 0.05,
+          z: rest.chip.z + 0.09,
+          duration: 0.45,
+        },
+        e + 0.14,
       );
-      tl.to(headband.position, { y: rest.headband.y + 0.1 }, 0);
+      tl.to(
+        headband.position,
+        { y: rest.headband.y + 0.12, duration: 0.55 },
+        e,
+      );
     };
 
     bind();
@@ -195,5 +252,5 @@ export function useNexaExplode(refs: NexaExplodeRefs, options: Options = {}) {
       tl?.kill();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reducedMotion, trigger, onProgress]);
+  }, [reducedMotion, enabled, trigger, onProgress]);
 }

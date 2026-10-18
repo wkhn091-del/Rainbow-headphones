@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import {
   FLAGSHIP,
@@ -16,26 +15,18 @@ import { ColorSwatches } from "./ColorSwatches";
 import { PreorderForm } from "./PreorderForm";
 import { StickyBuyBar } from "./StickyBuyBar";
 import { CheckoutModal } from "@/components/checkout/CheckoutModal";
-import { BuyProductFrame } from "@/components/commerce/BuyProductFrame";
 import { PaymentMethods } from "@/components/commerce/PaymentMethods";
-import { UpsellStrip } from "@/components/commerce/UpsellStrip";
 import { TrackViewed } from "@/components/commerce/TrackViewed";
 import { RecentlyViewed } from "@/components/commerce/RecentlyViewed";
+import { LazyCanvas } from "@/components/canvas/LazyCanvas";
+import { FomoCounter } from "@/components/experience/FomoCounter";
 import { saveResume } from "@/lib/store/resume";
 import { useIsClient } from "@/lib/client/mounted";
+import { usePrefersReducedMotion } from "@/lib/client/reduced-motion";
 import { isColorSoldOut } from "@/lib/stock/colors";
 
-const ProductScroll = dynamic(
-  () =>
-    import("@/components/product-scroll/ProductScroll").then(
-      (m) => m.ProductScroll,
-    ),
-  { ssr: false },
-);
-
 /**
- * Below ImmersiveHero: 3D scroll → color/commerce → Early Access form.
- * Single H1 lives in ImmersiveHero (SSR).
+ * Act 5 — checkout configurator: live 3D material swap + magnetic CTA + FOMO.
  */
 export function Hero() {
   const buyAnchorRef = useRef<HTMLDivElement>(null);
@@ -43,10 +34,11 @@ export function Hero() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [showSoldOutWaitlist, setShowSoldOutWaitlist] = useState(false);
   const mounted = useIsClient();
+  const reduced = usePrefersReducedMotion();
   const soldOut = isColorSoldOut(colorId);
 
   const color = useMemo(
-    () => NEXA_COLORS.find((c) => c.id === colorId) ?? NEXA_COLORS[0],
+    () => NEXA_COLORS.find((c) => c.id === colorId) ?? NEXA_COLORS[0]!,
     [colorId],
   );
 
@@ -63,7 +55,6 @@ export function Hero() {
         nameHe={FLAGSHIP.name}
         href="/#buy"
       />
-      <ProductScroll />
 
       <section
         id="buy"
@@ -122,6 +113,7 @@ export function Hero() {
             </div>
 
             <div className="mt-8 space-y-4">
+              <FomoCounter className="mb-2" />
               <BuyNowButton
                 colorId={colorId}
                 id="buy-cta"
@@ -149,7 +141,35 @@ export function Hero() {
           </div>
 
           <div className="order-1 lg:order-2 lg:sticky lg:top-24">
-            <BuyProductFrame colorId={colorId} />
+            <div
+              className="relative aspect-[4/5] overflow-hidden border border-white/12 bg-[#0a0a0c] sm:aspect-[5/6]"
+              style={{ boxShadow: `0 0 48px ${color.hex}33` }}
+            >
+              <div className="absolute inset-0">
+                {mounted ? (
+                  <LazyCanvas
+                    color={color}
+                    reducedMotion={reduced}
+                    explodeOnScroll={false}
+                    showBlueprint={false}
+                  />
+                ) : null}
+              </div>
+              <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-4">
+                <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-white/60 uppercase">
+                  Live material
+                </p>
+                <p
+                  className="border border-white/15 bg-black/50 px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.16em] uppercase backdrop-blur-sm"
+                  style={{ color: color.hex }}
+                >
+                  {color.nameEn}
+                </p>
+              </div>
+              <p className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-5 pt-16 text-sm text-white/70">
+                לחיצה על צבע מעדכנת את המודל עצמו — בלי תמונות סטטיות
+              </p>
+            </div>
           </div>
         </div>
 
@@ -170,24 +190,6 @@ export function Hero() {
         onClose={() => setCheckoutOpen(false)}
         colorId={colorId}
       />
-
-      <section
-        data-depth="bone"
-        className="nexa-atmosphere nexa-depth-wash relative overflow-hidden border-t border-[var(--color-border)] px-5 py-20 sm:px-8"
-      >
-        <div className="relative z-[1] mx-auto max-w-3xl text-center">
-          <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.32em] text-[var(--color-accent)] uppercase">
-            Bundle
-          </p>
-          <h2 className="mt-3 font-[family-name:var(--font-display)] text-2xl tracking-[-0.03em] text-white sm:text-3xl">
-            השלימו לפני התשלום
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-[var(--color-text-muted)]">
-            מארז אולפן מוכן — חיסכון מול קנייה נפרדת. לוחצים · מוסיפים · משלמים.
-          </p>
-          <UpsellStrip sku={PRODUCT_SKU} title="" />
-        </div>
-      </section>
 
       <section
         id="preorder"

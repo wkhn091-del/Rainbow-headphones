@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { Center, useGLTF } from "@react-three/drei";
+import gsap from "gsap";
 import * as THREE from "three";
 import type { NexaColor } from "@/lib/catalog";
 import { NEXA_MODEL_URL } from "@/lib/3d/model-source";
@@ -11,9 +12,73 @@ type Props = {
   color: NexaColor;
   reducedMotion?: boolean;
   onProgress?: (progress: number) => void;
+  /** When false, skip scroll explode (checkout configurator) */
+  explodeOnScroll?: boolean;
 };
 
 const EDGE = "#D8D6D2";
+
+type Paintable = {
+  mat: THREE.MeshPhysicalMaterial;
+  soft: boolean;
+  metal: boolean;
+};
+
+function collectPaint(root: THREE.Object3D): Paintable[] {
+  const out: Paintable[] = [];
+  root.traverse((o) => {
+    if (!(o instanceof THREE.Mesh)) return;
+    const list = Array.isArray(o.material) ? o.material : [o.material];
+    list.forEach((m) => {
+      if (!(m instanceof THREE.MeshPhysicalMaterial)) return;
+      const n = `${m.name ?? ""} ${o.name}`.toLowerCase();
+      out.push({
+        mat: m,
+        soft: n.includes("cushion") || n.includes("felt") || n.includes("soft") || n.includes("pad"),
+        metal:
+          n.includes("yoke") ||
+          n.includes("steel") ||
+          n.includes("galvanized") ||
+          n.includes("pin") ||
+          n.includes("hinge"),
+      });
+    });
+  });
+  return out;
+}
+
+function applyColorLive(paint: Paintable[], color: NexaColor, instant: boolean) {
+  const target = new THREE.Color(color.hex);
+  paint.forEach(({ mat, soft, metal }) => {
+    if (soft) return;
+    const next = target.clone();
+    if (metal) next.lerp(new THREE.Color("#e8ecf2"), 0.35);
+    if (instant) {
+      mat.color.copy(next);
+      mat.metalness = metal ? 0.92 : color.metalness;
+      mat.roughness = metal ? 0.18 : color.roughness;
+      mat.needsUpdate = true;
+      return;
+    }
+    const proxy = { r: mat.color.r, g: mat.color.g, b: mat.color.b };
+    gsap.to(proxy, {
+      r: next.r,
+      g: next.g,
+      b: next.b,
+      duration: 0.5,
+      ease: "power2.out",
+      onUpdate: () => {
+        mat.color.setRGB(proxy.r, proxy.g, proxy.b);
+      },
+    });
+    gsap.to(mat, {
+      metalness: metal ? 0.92 : color.metalness,
+      roughness: metal ? 0.18 : color.roughness,
+      duration: 0.5,
+      ease: "power2.out",
+    });
+  });
+}
 
 function polishMaterials(root: THREE.Object3D, color: NexaColor) {
   root.traverse((o) => {
@@ -27,11 +92,11 @@ function polishMaterials(root: THREE.Object3D, color: NexaColor) {
       const n = `${(mat as THREE.Material)?.name ?? ""} ${o.name}`.toLowerCase();
       const phys = new THREE.MeshPhysicalMaterial({
         color: color.hex,
-        metalness: 0.72,
-        roughness: 0.28,
-        clearcoat: 0.6,
-        clearcoatRoughness: 0.22,
-        envMapIntensity: 1.2,
+        metalness: color.metalness,
+        roughness: color.roughness,
+        clearcoat: 0.65,
+        clearcoatRoughness: 0.18,
+        envMapIntensity: 1.35,
       });
 
       if (
@@ -43,27 +108,23 @@ function polishMaterials(root: THREE.Object3D, color: NexaColor) {
         if (mat.roughnessMap) phys.roughnessMap = mat.roughnessMap;
         if (mat.metalnessMap) phys.metalnessMap = mat.metalnessMap;
         if (mat.aoMap) phys.aoMap = mat.aoMap;
-        phys.color.copy(mat.color);
       }
 
-      if (n.includes("cushion") || n.includes("felt") || n.includes("soft")) {
+      if (n.includes("cushion") || n.includes("felt") || n.includes("soft") || n.includes("pad")) {
         phys.metalness = 0.02;
         phys.roughness = 0.9;
         phys.clearcoat = 0;
-        phys.color.lerp(new THREE.Color("#121316"), 0.4);
+        phys.color.set("#1a1b20");
       } else if (n.includes("yoke") || n.includes("steel") || n.includes("galvanized")) {
-        phys.metalness = 0.9;
-        phys.roughness = 0.2;
-        phys.clearcoat = 0.75;
-        phys.color.lerp(new THREE.Color(color.hex), 0.45);
-      } else if (n.includes("shell") || n.includes("powder") || n.includes("charcoal")) {
-        phys.metalness = 0.58;
-        phys.roughness = 0.36;
-        phys.clearcoat = 0.45;
-        phys.color.lerp(new THREE.Color(color.hex), 0.6);
+        phys.metalness = 0.92;
+        phys.roughness = 0.18;
+        phys.clearcoat = 0.8;
+        phys.color.lerp(new THREE.Color("#e8ecf2"), 0.35);
+      } else if (n.includes("shell") || n.includes("powder") || n.includes("charcoal") || n.includes("cup")) {
+        phys.color.set(color.hex);
       } else if (n.includes("headband") || n.includes("arch")) {
-        phys.metalness = 0.5;
-        phys.roughness = 0.4;
+        phys.color.lerp(new THREE.Color(color.hex), 0.7);
+      } else {
         phys.color.lerp(new THREE.Color(color.hex), 0.55);
       }
 
@@ -84,7 +145,12 @@ function worldX(obj: THREE.Object3D) {
  * Innerscene Monitor Cans (CC0) — graphite studio over-ears.
  * Explode: headband · L/R shell+yoke · cushions · drivers/chip overlays.
  */
-export function NexaModel({ color, reducedMotion, onProgress }: Props) {
+export function NexaModel({
+  color,
+  reducedMotion,
+  onProgress,
+  explodeOnScroll = true,
+}: Props) {
   const { scene } = useGLTF(NEXA_MODEL_URL);
 
   const groupRef = useRef<THREE.Group>(null);
@@ -96,10 +162,13 @@ export function NexaModel({ color, reducedMotion, onProgress }: Props) {
   const driverLRef = useRef<THREE.Object3D>(null);
   const driverRRef = useRef<THREE.Object3D>(null);
   const chipRef = useRef<THREE.Object3D>(null);
+  const paintRef = useRef<Paintable[]>([]);
+  const firstColor = useRef(true);
 
   const clone = useMemo(() => {
     const c = scene.clone(true);
     polishMaterials(c, color);
+    paintRef.current = collectPaint(c);
     c.updateMatrixWorld(true);
 
     const headband = c.getObjectByName("Padded headband arch");
@@ -138,7 +207,9 @@ export function NexaModel({ color, reducedMotion, onProgress }: Props) {
       cushionL: cushions[0] ?? null,
       cushionR: cushions[1] ?? null,
     };
-  }, [scene, color]);
+    // color applied live — clone once per scene
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scene]);
 
   useLayoutEffect(() => {
     headbandRef.current = clone.headband;
@@ -147,6 +218,11 @@ export function NexaModel({ color, reducedMotion, onProgress }: Props) {
     cushionLRef.current = clone.cushionL;
     cushionRRef.current = clone.cushionR;
   }, [clone]);
+
+  useEffect(() => {
+    applyColorLive(paintRef.current, color, firstColor.current || Boolean(reducedMotion));
+    firstColor.current = false;
+  }, [color, reducedMotion]);
 
   const stableProgress = useCallback(
     (p: number) => onProgress?.(p),
@@ -165,12 +241,16 @@ export function NexaModel({ color, reducedMotion, onProgress }: Props) {
       driverR: driverRRef,
       chip: chipRef,
     },
-    { reducedMotion, onProgress: stableProgress },
+    {
+      enabled: explodeOnScroll,
+      reducedMotion,
+      onProgress: explodeOnScroll ? stableProgress : undefined,
+    },
   );
 
   return (
-    <Center cacheKey={`monitor-cans-${color.id}`}>
-      <group ref={groupRef} scale={7.4}>
+    <Center cacheKey="nexa-monitor-cans">
+      <group ref={groupRef} scale={explodeOnScroll ? 7.4 : 6.6}>
         <primitive object={clone.root} />
 
         <mesh position={[0.085, 0.015, 0.035]}>

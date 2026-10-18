@@ -14,12 +14,20 @@ type Props = {
   color: NexaColor;
   reducedMotion?: boolean;
   onProgress?: (progress: number) => void;
+  explodeOnScroll?: boolean;
+  showBlueprint?: boolean;
 };
 
 /**
  * Cold Studio WebGL — 5-node blueprint + line HUD (no drei Html portals).
  */
-export function CanvasMount({ color, reducedMotion, onProgress }: Props) {
+export function CanvasMount({
+  color,
+  reducedMotion,
+  onProgress,
+  explodeOnScroll = true,
+  showBlueprint = true,
+}: Props) {
   const ready = useIsClient();
   const rafRef = useRef(0);
   const lastRef = useRef(-1);
@@ -41,11 +49,20 @@ export function CanvasMount({ color, reducedMotion, onProgress }: Props) {
 
   if (!ready) return null;
 
+  const fillViewport = explodeOnScroll;
+
   return (
-    <div className="relative h-full min-h-[100dvh] w-full">
+    <div
+      className={`relative h-full w-full ${fillViewport ? "min-h-[100dvh]" : "min-h-0"}`}
+    >
       <Canvas
         frameloop="always"
-        camera={{ position: [0.15, 0.2, 2.15], fov: 32, near: 0.05, far: 80 }}
+        camera={{
+          position: fillViewport ? [0.15, 0.2, 2.15] : [0.1, 0.12, 2.45],
+          fov: fillViewport ? 32 : 36,
+          near: 0.05,
+          far: 80,
+        }}
         dpr={[1, 1.75]}
         gl={{
           antialias: true,
@@ -91,12 +108,12 @@ export function CanvasMount({ color, reducedMotion, onProgress }: Props) {
           }
         >
           <NexaModel
-            key={color.id}
             color={color}
             reducedMotion={reducedMotion}
             onProgress={handleProgress}
+            explodeOnScroll={explodeOnScroll}
           />
-          <BlueprintStage />
+          {showBlueprint ? <BlueprintStage /> : null}
         </Suspense>
 
         <ContactShadows
@@ -107,10 +124,12 @@ export function CanvasMount({ color, reducedMotion, onProgress }: Props) {
           far={3}
           color="#000000"
         />
-        <gridHelper
-          args={[8, 16, "#1a1c22", "#101114"]}
-          position={[0, -0.96, 0]}
-        />
+        {showBlueprint ? (
+          <gridHelper
+            args={[8, 16, "#1a1c22", "#101114"]}
+            position={[0, -0.96, 0]}
+          />
+        ) : null}
       </Canvas>
     </div>
   );

@@ -12,6 +12,8 @@ type Props = {
   color: NexaColor;
   reducedMotion?: boolean;
   onProgress?: (progress: number) => void;
+  explodeOnScroll?: boolean;
+  showBlueprint?: boolean;
 };
 
 export function LazyCanvas(props: Props) {
