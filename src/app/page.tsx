@@ -1,6 +1,9 @@
-import { ScrollExperience } from "@/components/experience/ScrollExperience";
+import { ExperienceGate } from "@/components/experience/ExperienceGate";
 import { BreatheSection } from "@/components/experience/BreatheSection";
 import { StudioBento } from "@/components/experience/StudioBento";
+import { ImmersiveHero } from "@/components/hero/ImmersiveHero";
+import { ScrollCinema } from "@/components/hero/ScrollCinema";
+import { SpecStripMask } from "@/components/motion/SpecStripMask";
 import { StudioDepth } from "@/components/motion/StudioDepth";
 import { Hero } from "@/components/hero/Hero";
 import { HomeBelowFold } from "@/components/home/HomeBelowFold";
@@ -21,17 +24,20 @@ export default function Home() {
       <ProductJsonLd />
       <LaunchStrip />
       <HomeNav />
-      {/* Acts 1–2: preload · reveal · drop · explode */}
-      <ScrollExperience />
-      {/* Act 3: horizontal breathe typography */}
-      <BreatheSection />
-      {/* Act 4: asymmetric studio bento + glass trust */}
-      <StudioBento />
-      <TrustRow />
-      {/* Act 5: live 3D configurator + magnetic checkout + FOMO */}
-      <Hero />
-      <WhyNexa />
-      <HomeBelowFold />
+      <ExperienceGate>
+        {/* Hook + scroll cinema videos */}
+        <ImmersiveHero />
+        <ScrollCinema />
+        <SpecStripMask />
+        {/* Descending 3D headphones (Quiet / NEXA) live inside Hero */}
+        <Hero />
+        {/* New acts after the classic scroll story */}
+        <BreatheSection />
+        <StudioBento />
+        <TrustRow />
+        <WhyNexa />
+        <HomeBelowFold />
+      </ExperienceGate>
       <SiteFooter />
       <WhatsAppFloat />
       <CookieBanner />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import {
   FLAGSHIP,
@@ -25,8 +26,16 @@ import { useIsClient } from "@/lib/client/mounted";
 import { usePrefersReducedMotion } from "@/lib/client/reduced-motion";
 import { isColorSoldOut } from "@/lib/stock/colors";
 
+const ProductScroll = dynamic(
+  () =>
+    import("@/components/product-scroll/ProductScroll").then(
+      (m) => m.ProductScroll,
+    ),
+  { ssr: false },
+);
+
 /**
- * Act 5 — checkout configurator: live 3D material swap + magnetic CTA + FOMO.
+ * Scroll cinema handoff → descending 3D cans → checkout configurator.
  */
 export function Hero() {
   const buyAnchorRef = useRef<HTMLDivElement>(null);
@@ -55,6 +64,9 @@ export function Hero() {
         nameHe={FLAGSHIP.name}
         href="/#buy"
       />
+
+      {/* Headphones descend through Quiet / NEXA plates */}
+      <ProductScroll />
 
       <section
         id="buy"
