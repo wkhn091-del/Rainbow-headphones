@@ -6,12 +6,13 @@ import "lenis/dist/lenis.css";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePrefersReducedMotion } from "@/lib/client/reduced-motion";
+import { MOTION } from "@/lib/motion/tokens";
 
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * Tier 3 global Lenis — single instance, synced to ScrollTrigger.
- * Skips when reduced-motion.
+ * Single Lenis instance (book rule) — cinematic lerp, synced to ScrollTrigger.
+ * Skips when reduced-motion. Forms use data-lenis-prevent.
  */
 export function SmoothScroll() {
   const reduced = usePrefersReducedMotion();
@@ -20,8 +21,18 @@ export function SmoothScroll() {
     if (reduced) return;
 
     const lenis = new Lenis({
-      lerp: 0.1,
+      lerp: MOTION.lerp,
       smoothWheel: true,
+      wheelMultiplier: 0.85,
+      touchMultiplier: 0.9,
+      // Book A03 — no smooth hijack inside conversion fields
+      prevent: (node) =>
+        Boolean(
+          node instanceof HTMLElement &&
+            node.closest(
+              "[data-lenis-prevent], input, textarea, select, [contenteditable='true']",
+            ),
+        ),
     });
 
     lenis.on("scroll", ScrollTrigger.update);

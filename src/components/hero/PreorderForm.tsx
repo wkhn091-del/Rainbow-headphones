@@ -114,7 +114,11 @@ export function PreorderForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="relative flex w-full flex-col gap-5">
+    <form
+      onSubmit={onSubmit}
+      data-lenis-prevent
+      className="relative flex w-full flex-col gap-5"
+    >
       <LuxeField
         name="email"
         type="email"

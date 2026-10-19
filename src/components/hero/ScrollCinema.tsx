@@ -17,8 +17,11 @@ import { useIsClient } from "@/lib/client/mounted";
 import { copy } from "@/lib/copy/he";
 import { track } from "@/lib/analytics/track";
 
-const LERP = 0.1;
-const SEEK_EPS = 0.01;
+import { MOTION } from "@/lib/motion/tokens";
+import { useIsMobile } from "@/lib/client/mobile";
+
+const LERP = MOTION.filmLerp;
+const SEEK_EPS = 0.008;
 
 /**
  * Full-bleed scroll cinema — sits below ImmersiveHero.
@@ -37,7 +40,9 @@ export function ScrollCinema() {
   const cinemaDoneRef = useRef(false);
   const mounted = useIsClient();
   const reduced = usePrefersReducedMotion();
+  const mobile = useIsMobile();
   const staticMode = reduced || fpsFail;
+  const trackVh = mobile ? CINEMA.trackVhMobile : CINEMA.trackVh;
 
   useEffect(() => {
     if (!mounted || staticMode) return;
@@ -160,7 +165,7 @@ export function ScrollCinema() {
       ref={sectionRef}
       id="cinema"
       className="nexa-cinema relative z-[1] bg-[var(--color-bg)]"
-      style={{ height: staticMode ? "100dvh" : `${CINEMA.trackVh}vh` }}
+      style={{ height: staticMode ? "100dvh" : `${trackVh}vh` }}
       aria-label={`${copy.brand} — סינמה בגלילה`}
     >
       <p className="sr-only" aria-live="polite">

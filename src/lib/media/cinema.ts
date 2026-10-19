@@ -4,8 +4,12 @@ export const CINEMA = {
   scrubSrc: "/videos/product/cinema-scrub.mp4",
   /** Product-first still — headphones (not world/space plate) */
   poster: "/images/lifestyle/nexa-real-desk.jpg",
-  /** Scroll distance for pin scrub — kept short so M3 strip is reachable */
-  trackVh: 280,
+  /**
+   * Pin scrub length — Motion of Millions cinematic.
+   * Longer = film advances slower with the wheel (user complaint: was too fast).
+   */
+  trackVh: 520,
+  trackVhMobile: 400,
   chapters: [
     {
       id: "world",

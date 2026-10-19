@@ -1,0 +1,61 @@
+# Motion of Millions — תנועה כרטיס (Nexa Pro 3D)
+# Source: motion-of-millions-book.pdf · 7 golden rules · tier 2
+
+project: "Nexa Audio — Nexa Pro 3D"
+niche: [N14] # tech product / audio launch (closest catalog fit)
+mood: cinematic # luxury touch on conversion
+tier: 2
+tier_reason: "כוכב המוצר הוא GLB + סינמת וידאו; אי WebGL אחד בכל רגע, לא אתר-סצנה מלא"
+
+tokens:
+  ease: "expo.inOut"
+  duration: 1.6
+  distance: 40
+  stagger: 0.12
+  lerp: 0.07 # Lenis — cinematic (was 0.1 = too snappy)
+
+hero: E1-09 # cinematic open (ImmersiveHero) → ScrollCinema scrub
+sections:
+  - name: "הסינמה"
+    element: E1-25 # sticky screen + media scrub
+    lever: P03 # curiosity / incomplete gestalt
+    track_vh: 520
+  - name: "האוזנייה במרחב"
+    element: E2-01 # product scroll choreography
+    lever: P10 # process transparency
+    section_vh: 150
+  - name: "נתונים"
+    element: E1-15 # counter / breathe type
+    lever: P12 # concrete numbers
+  - name: "למה Nexa"
+    element: E1-54
+    lever: P15 # trust / identity
+  - name: "מארז אולפן"
+    element: E1-52 # bento
+    lever: P22 # bundle anchoring
+
+proof: [E1-15, E1-64]
+conversion: [E1-68, E1-71, E1-15]
+navigation: [E1-60]
+ambient: null
+
+budget:
+  pinned: 2 # cinema + product-scroll only — breath chapter between
+  webgl_canvases: 1 # product-scroll OR configurator, never both on screen
+  cursor_effects: 1 # MagneticCursor only
+
+mobile: "cinema track 400vh; product sections 130vh; snap breathe; lower DPR"
+reduced_motion: "static posters; no Lenis; assembled product stills"
+
+psychology_levers:
+  - P03: "scroll cinema incomplete until they finish the reel"
+  - P07: "path continuity desk → explode → 3D → buy"
+  - P12: "48h / 300 units / 2yr — real catalog numbers only"
+  - P18: "loss aversion — launch units + 14-day return (truth)"
+  - P22: "studio bundle price vs separate"
+
+do_not:
+  - invent fake reviews or stock
+  - stack more than 2 pins without a normal chapter
+  - Lenis inside checkout/preorder fields
+  - invent new animations outside E catalog

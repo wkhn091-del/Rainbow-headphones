@@ -48,7 +48,14 @@ body.nexa-ps-on-color .nexa-ps {
 .nexa-ps .s {
   position: relative;
   width: 100%;
-  height: 100vh;
+  /* Taller chapters = slower headphone descent (Motion of Millions scrub) */
+  height: 150vh;
+}
+
+@media (max-width: 767px) {
+  .nexa-ps .s {
+    height: 130vh;
+  }
 }
 
 .nexa-ps .s2 {

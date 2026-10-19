@@ -17,13 +17,17 @@
   --color-buy-text: #0c0c0c;
   --color-danger: #d4786a;
 
+  /* Motion of Millions — cinematic tokens */
   --motion-instant: 100ms;
   --motion-fast: 180ms;
   --motion-base: 280ms;
   --motion-slow: 500ms;
+  --motion-cinematic: 1600ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cinematic: cubic-bezier(0.87, 0, 0.13, 1);
+  --lenis-lerp: 0.07;
 
   --radius-sm: 2px;
   --radius-md: 4px;
